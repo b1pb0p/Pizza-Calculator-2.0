@@ -30,9 +30,11 @@ You can view the original source here:
 ## 📸 Screenshots
 
 **Default recipe**
+
 ![Default recipe](https://github.com/b1pb0p/Pizza-Calculator-2.0/blob/main/src/screenshots/Screenshot%202025-04-20%20114608.png)
 
 **Room proof only, select yeast type**
+
 ![Room proof only, select yeast type](https://github.com/b1pb0p/Pizza-Calculator-2.0/blob/main/src/screenshots/Screenshot%202025-04-20%20114737.png)
 
 
