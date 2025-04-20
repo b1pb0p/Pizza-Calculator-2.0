@@ -1,0 +1,28 @@
+{
+  "fonts": {
+    "relative_path_directory": "ui/fonts",
+    "title_font": {
+      "filename": "SpecialGothicExpandedOne-Regular.ttf",
+      "size": 25
+    },
+    "default_font": {
+      "filename": "RobotoMono-VariableFont_wght.ttf",
+      "size": 20
+    },
+    "secondary_title_font": {"filename": "RobotoMono-Bold.ttf", "size": 20}
+  },
+  "icons": {
+    "relative_path_directory": "icons"          ,
+    "small_icon"             : "pizza_small.ico",
+    "large_icon"             : "pizza_large.ico",
+    "save_icon"              : "diskette.png"   ,
+    "load_icon"              : "folder.png"     ,
+    "export_icon"            : "export.png"
+  },
+  "viewport": {
+    "application_title": "Pizza Recipe",
+    "width": 550,
+    "height": 710,
+    "viewport_position": [150, 20]
+  }
+}

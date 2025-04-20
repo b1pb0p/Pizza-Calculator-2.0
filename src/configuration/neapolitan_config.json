@@ -1,0 +1,35 @@
+{
+  "yeast_table_parameters": {
+    "yeast_table_filename": "neopolitan_yeast_table.csv",
+    "yeast_types": [
+      "ADY",
+      "IDY",
+      "CY",
+      "SS"
+    ],
+    "temperature_column": 0,
+    "first_temperature_row": 6,
+    "last_temperature_row": 66,
+    "first_duration_column": 2,
+    "last_duration_column": 28,
+    "lower_range_temperature_row": 9,
+    "upper_range_temperature_row": 50,
+    "default_room_temperature_row": 41,
+    "default_room_fermentation_column": 23,
+    "default_fridge_temperature_row": 11,
+    "default_fridge_fermentation_column": 18
+  },
+  "base_recipe" : {
+    "pizza_style": "Neo-Neapolitan",
+    "salt_percentage": 3,
+    "oil_percentage": 1,
+    "yeast_type": "IDY",
+    "hydration": 73,
+    "ball_weight": 295,
+    "number_of_balls": 3,
+    "room_temperature": 21,
+    "room_fermentation": 2,
+    "fridge_temperature": 5,
+    "fridge_fermentation": 48
+  }
+}
