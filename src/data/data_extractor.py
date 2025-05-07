@@ -1,6 +1,7 @@
 import csv
-from src.errors.error_messages import ErrorMessages
-from src.configuration.configuration import Configuration
+
+from src.errors import ErrorMessages
+from src.configuration import Configuration
 
 
 class DataExtractor:
@@ -72,7 +73,6 @@ class DataExtractor:
         :param row_index: Row index (1-based).
         :return: List of durations as strings.
         """
-        row_index = row_index
         column_start, column_end = self._duration_column_range
         reader = self._csv_data
 
@@ -95,6 +95,15 @@ class DataExtractor:
         """
         temperature_row_index = self.get_temperature_row_index(temperature, strict=False)
         return self.get_duration_value_range(temperature_row_index)
+
+    def get_sorted_durations_by_temperature(self, temperature):
+        """
+        Get a sorted list of unique durations (as strings) for a given temperature
+        :param temperature: The temperature to retrieve durations for.
+        :return: List of duration strings, sorted and unique.
+        """
+        return [int(duration) for duration in
+                sorted(set(self.get_duration_range_by_temperature(temperature)))]
 
     def get_temperature_row_index(self, temperature: float, strict: bool = True) -> int:
         """
@@ -210,16 +219,3 @@ class DataExtractor:
         :return: List of yeast type strings.
         """
         return self._configuration.get_yeast_types()
-
-    @staticmethod
-    def _find_closest_duration_value(duration: float, duration_range: list) -> float:
-        """
-        Finds the closest duration value from the given duration_range list.
-
-        :param duration: Duration value to match (float).
-        :param duration_range: List of duration strings or floats.
-        :return: Closest matching duration value as float.
-        """
-        duration_values_floats = [float(d) for d in duration_range]
-        closest = min(duration_values_floats, key=lambda val: abs(val - duration))
-        return closest

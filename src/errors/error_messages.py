@@ -10,7 +10,3 @@ class ErrorMessages:
     TEMPERATURE_NOT_FOUND = "Temperature {} not found in temperature value range."
     UNKNOWN_YEAST_TYPE = "Yeast type '{}' not found in configuration yeast types: {}"
     MISSING_TEMPERATURES = "Missing temperature values: at least one temperature must be set for fermentation."
-
-
-
-

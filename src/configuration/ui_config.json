@@ -1,6 +1,6 @@
 {
   "fonts": {
-    "relative_path_directory": "ui/fonts",
+    "relative_path_directory": "fonts",
     "title_font": {
       "filename": "SpecialGothicExpandedOne-Regular.ttf",
       "size": 25
@@ -13,6 +13,7 @@
   },
   "icons": {
     "relative_path_directory": "icons"          ,
+    "menu_button_dimensions" : [16, 16],
     "small_icon"             : "pizza_small.ico",
     "large_icon"             : "pizza_large.ico",
     "save_icon"              : "diskette.png"   ,
@@ -21,7 +22,7 @@
   },
   "viewport": {
     "application_title": "Pizza Recipe",
-    "width": 550,
+    "width": 520,
     "height": 710,
     "viewport_position": [150, 20]
   }

@@ -3,7 +3,7 @@ recipe.py
 This file contains the PizzaRecipe class
 """
 
-from src.recipe.utilities import auto_property
+from .utilities import auto_property
 
 
 class PizzaRecipe:
@@ -71,8 +71,7 @@ class PizzaRecipe:
             f"Water: {round(self._calculator.calculate_water_weight(self))}g",
             f"Salt: {round(self._calculator.calculate_salt_weight(self))}g",
             f"Oil: {round(self._calculator.calculate_oil_weight(self))}g",
-            f"Yeast: {self._format_yeast()}g of {self._yeast_type}",
-            # f"Yeast: {self._calculator.calculate_yeast_weight(self):.3f}g of {self._yeast_type}",
+            f"Yeast: {self._format_yeast()}g of {self._yeast_type}"
         ]
 
         if self._fridge_fermentation and self._fridge_temperature:
