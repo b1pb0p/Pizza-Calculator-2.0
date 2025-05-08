@@ -1,3 +1,10 @@
+"""
+manager.py
+
+This module manages the saving, loading, and construction of pizza recipes in various formats
+(e.g., JSON, TXT).
+"""
+
 import json
 import os
 

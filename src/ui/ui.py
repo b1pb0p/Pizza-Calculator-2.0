@@ -1,3 +1,11 @@
+"""
+ui.py
+
+This file contains the Ui class, which acts as the main UI controller for the Pizza Recipe
+application using DearPyGUI. It initializes and builds the interface, loads recipes,
+and connects GUI components through the WidgetHandler class.
+"""
+
 import dearpygui.dearpygui as dpg
 
 from .widgets import WidgetHandler
@@ -14,8 +22,10 @@ class Ui:
     def __init__(self, recipe=None):
         """
         Initializes the UI context and loads the recipe (default or given).
-        Constructs the main window and interface elements
-        :param recipe: Optional recipe object to initialize the UI with. If None, loads the default recipe.
+        Constructs the main window and interface elements.
+
+        Args:
+            recipe (PizzaRecipe, optional): Recipe object to initialize the UI with. If None, loads the default recipe.
         """
         dpg.create_context()
 

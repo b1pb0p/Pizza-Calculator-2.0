@@ -1,4 +1,16 @@
+"""
+error_messages.py
+
+This module contains predefined error message templates used throughout the program.
+These templates are used for various error scenarios related to fermentation and configuration.
+"""
+
+
 class ErrorMessages:
+    """
+    A class that holds various error message templates used throughout the program.
+    """
+
     INVALID_FERMENTATION = (
         "Invalid fermentation time combination: " 
         "the time at the given temperatures may be too long or unsupported.\n"

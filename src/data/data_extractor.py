@@ -1,3 +1,11 @@
+"""
+data_extractor.py
+
+Defines the singleton DataExtractor class responsible for parsing and extracting yeast data
+from a CSV file based on temperature, fermentation duration, and yeast type.
+Used to determine the appropriate yeast percentage for pizza dough recipes.
+"""
+
 import csv
 
 from src.errors import ErrorMessages
@@ -12,13 +20,14 @@ class DataExtractor:
     _instance = None
 
     def __new__(cls):
+        """Ensures that only one instance of DataExtractor exists (singleton pattern)."""
         if cls._instance is None:
             cls._instance = super(DataExtractor, cls).__new__(cls)
             cls._instance._initialized = False
         return cls._instance
 
     def __init__(self):
-        """ Initializes the DataExtractor """
+        """Initializes CSV data, temperature and duration ranges from the configuration."""
         if self._initialized:
             return
 
@@ -36,26 +45,31 @@ class DataExtractor:
         """
         Loads and parses the CSV file.
 
-        :return: List of lists representing the CSV data.
+        Returns:
+            list[list[str]]: 2D list containing CSV rows and columns.
         """
         with open(self._yeast_data_file, newline='', encoding='utf-8') as csvfile:
             return list(csv.reader(csvfile))
 
-    def get_cell_value(self, row, column):
+    def get_cell_value(self, row: int, column: int) -> str:
         """
         Retrieves the value at a specific row and column (1-based index).
 
-        :param row: Row number.
-        :param column: Column number (1-based).
-        :return: Value at the specified cell.
+        Args:
+            row (int): Row index.
+            column (int): Column index.
+
+        Returns:
+            str: Value at the given cell.
         """
         return self._csv_data[row][column]
 
-    def get_temperature_value_range(self):
+    def get_temperature_value_range(self) -> list[float]:
         """
-        Returns a list of temperature strings found in the CSV, within a configured row range.
+        Returns a list of temperature values (as floats) found in the configured row range.
 
-        :return: List of temperature values as strings.
+        Returns:
+            list[float]: List of temperature values.
         """
         column_index = self._temperature_column
         row_start, row_end = self._temperature_range
@@ -67,11 +81,15 @@ class DataExtractor:
             if i < len(reader) and column_index < len(reader[i]) and reader[i][column_index].strip()
         ]
 
-    def get_duration_value_range(self, row_index):
+    def get_duration_value_range(self, row_index: int) -> list[float]:
         """
-        Returns a list of duration values in a specified row
-        :param row_index: Row index (1-based).
-        :return: List of durations as strings.
+        Returns a list of duration values in a specified row.
+
+        Args:
+            row_index (int): Row index (1-based).
+
+        Returns:
+            list[float]: List of duration values.
         """
         column_start, column_end = self._duration_column_range
         reader = self._csv_data
@@ -86,33 +104,45 @@ class DataExtractor:
             if i < len(row) and row[i].strip()
         ]
 
-    def get_duration_range_by_temperature(self, temperature):
+    def get_duration_range_by_temperature(self, temperature: float) -> list[float]:
         """
         Retrieves the list of durations available for a given temperature.
 
-        :param temperature: The temperature as a float (e.g., 4.0).
-        :return: List of duration values (floats) for the given temperature.
+        Args:
+            temperature (float): The temperature value.
+
+        Returns:
+            list[float]: List of duration values for the given temperature.
         """
         temperature_row_index = self.get_temperature_row_index(temperature, strict=False)
         return self.get_duration_value_range(temperature_row_index)
 
-    def get_sorted_durations_by_temperature(self, temperature):
+    def get_sorted_durations_by_temperature(self, temperature: float) -> list[float]:
         """
-        Get a sorted list of unique durations (as strings) for a given temperature
-        :param temperature: The temperature to retrieve durations for.
-        :return: List of duration strings, sorted and unique.
+        Returns a sorted list of unique durations for a given temperature.
+
+        Args:
+            temperature (float): Temperature to retrieve durations for.
+
+        Returns:
+            list[float]: Sorted and unique duration values.
         """
         return [int(duration) for duration in
                 sorted(set(self.get_duration_range_by_temperature(temperature)))]
 
     def get_temperature_row_index(self, temperature: float, strict: bool = True) -> int:
         """
-        Given a float temperature value, returns the corresponding row index
-        within the temperature_value_range list. Adjusts with the start of the temperature row range
-        :param temperature: Temperature as float (e.g., 3.9)
-        :param strict: If True, only exact match is accepted. If False, the closest match will be used.
-        :return: Corresponding row index in the yeast data file
-        :raises: ValueError if temperature is not found and strict is True
+        Given a temperature value, returns the corresponding row index within the temperature range.
+
+        Args:
+            temperature (float): Temperature value.
+            strict (bool): If True, only exact match is accepted. If False, the closest match is allowed.
+
+        Returns:
+            int: Row's index in the CSV file.
+
+        Raises:
+            ValueError: If temperature is not found and strict is True.
         """
         temperature_str = f"{temperature:.1f}"
 
@@ -126,14 +156,16 @@ class DataExtractor:
 
         return self._temperature_range[0] + local_index
 
-    def get_closest_duration_column(self, duration, temperature):
+    def get_closest_duration_column(self, duration: float, temperature: float) -> int:
         """
-        Retrieves the column index corresponding to the closest duration value
-        for a given temperature.
+        Retrieves the column index corresponding to the closest duration value for a given temperature.
 
-        :param duration: Duration value as float
-        :param temperature: Temperature value as float.
-        :return: Closest matching duration column index (0-based).
+        Args:
+            duration (float): Duration value.
+            temperature (float): Temperature value.
+
+        Returns:
+            int: Closest matching duration column index.
         """
         temperature_row_index = self.get_temperature_row_index(temperature, strict=False)
         duration_values = self.get_duration_value_range(temperature_row_index)
@@ -144,13 +176,17 @@ class DataExtractor:
 
         return closest_duration_column
 
-    def _find_closest_duration_column(self, row, duration, duration_range):
+    def _find_closest_duration_column(self, row: int, duration: float, duration_range: list[float]) -> int:
         """
-        Finds the closest duration column for a given duration value in a specific row
-        :param row: Row index.
-        :param duration: Duration value to match (float).
-        :param duration_range: List of durations from the row.
-        :return: Column index corresponding to the closest duration.
+        Finds the closest duration column for a given duration value in a specific row.
+
+        Args:
+            row (int): Row index.
+            duration (float): Duration value to match.
+            duration_range (list[float]): List of durations from the row.
+
+        Returns:
+            int: Column index corresponding to the closest duration.
         """
         duration_values_floats = [float(d) for d in duration_range]
         closest_diff = min(abs(val - duration) for val in duration_values_floats)
@@ -163,10 +199,17 @@ class DataExtractor:
 
     def _get_null_offset(self, row_index: int, start_col: int) -> int:
         """
-        Finds the first non-null column starting from start_col in the specified row
-        :param row_index: Row index
-        :param start_col: Starting column index.
-        :return: Index of first non-null column.
+        Finds the first non-null column starting from start_col in the specified row.
+
+        Args:
+            row_index (int): Row index.
+            start_col (int): Starting column index.
+
+        Returns:
+            int: Index of first non-null column.
+
+        Raises:
+            IndexError: If the row index is out of bounds.
         """
         reader = self._csv_data
 
@@ -182,10 +225,16 @@ class DataExtractor:
 
     def get_yeast_type_index(self, yeast_type):
         """
-        Returns the index of the specified yeast type from the config yeast types list
-        :param yeast_type: Name of yeast type.
-        :return: Index of the yeast type.
-        :raises: ValueError if the yeast type is not found.
+        Returns the index of the specified yeast type.
+
+        Args:
+            yeast_type (str): Name of the yeast type.
+
+        Returns:
+            int: Index of the yeast type.
+
+        Raises:
+            ValueError: If the yeast type is not found.
         """
         yeast_type_row = self._configuration.get_yeast_types()
         try:
@@ -193,29 +242,35 @@ class DataExtractor:
         except ValueError:
             raise ValueError(ErrorMessages.UNKNOWN_YEAST_TYPE.format(yeast_type, yeast_type_row))
 
-    def get_yeast_percentage(self, yeast_type, duration_column):
+    def get_yeast_percentage(self, yeast_type, duration_column) -> float:
         """
-        Retrieves the yeast percentage from the CSV for a specific yeast type and duration
-        :param yeast_type: Type of yeast (e.g., "IDY", "ADY").
-        :param duration_column: Column index (1-based) for duration.
-        :return: Yeast percentage as a string.
+        Retrieves the yeast percentage from the CSV for a specific yeast type and duration.
+
+        Args:
+            yeast_type (str): Type of yeast.
+            duration_column (int): Column index for duration.
+
+        Returns:
+            float: Yeast percentage value.
         """
         yeast_type_row = self.get_yeast_type_index(yeast_type)
-        return self.get_cell_value(yeast_type_row, duration_column)
+        return float(self.get_cell_value(yeast_type_row, duration_column))
 
     @property
-    def temperature_value_range(self):
+    def temperature_value_range(self) -> list[float]:
         """
         Property for accessing the cached list of temperature values.
 
-        :return: List of temperature values (as strings).
+        Returns:
+            list[float]: List of temperature values.
         """
         return self._temperature_value_range
 
     def get_yeast_types(self):
         """
-        Retrieves the list of yeast types defined in the configuration file.
+        Retrieves the list of yeast types from the configuration.
 
-        :return: List of yeast type strings.
+        Returns:
+            list[str]: List of yeast types.
         """
         return self._configuration.get_yeast_types()

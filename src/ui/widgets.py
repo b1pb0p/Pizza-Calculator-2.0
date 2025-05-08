@@ -1,3 +1,11 @@
+"""
+widgets.py
+
+Handles the creation and management of UI widgets for the Pizza Recipe application using DearPyGUI.
+Defines methods for loading input fields, proofing modes, and action buttons,
+as well as the layout and behavior of the main UI components.
+"""
+
 from pathlib import Path
 
 import dearpygui.dearpygui as dpg
@@ -16,6 +24,15 @@ class WidgetHandler:
     _instances = {}
 
     def __new__(cls, recipe):
+        """
+        Ensures a single instance per unique recipe object.
+
+        Args:
+            recipe: The pizza recipe object associated with this handler.
+
+        Returns:
+            WidgetHandler: The singleton instance associated with the given recipe.
+        """
         if recipe not in cls._instances:
             instance = super().__new__(cls)
             cls._instances[recipe] = instance
@@ -24,8 +41,10 @@ class WidgetHandler:
 
     def __init__(self, recipe):
         """
-        Initializes the WidgetHandler with the given recipe and data extractor
-        :param recipe: The pizza recipe object that holds the recipe parameters
+        Initializes the WidgetHandler with the given recipe and data extractor.
+
+        Args:
+            recipe: The pizza recipe object that holds the recipe parameters.
         """
         if self._initialized:
             return
@@ -52,6 +71,7 @@ class WidgetHandler:
     def _get_fonts(self):
         """
         Load and register fonts from configuration.
+
         Returns:
             tuple: (title_font, default_font, secondary_title_font)
         """
@@ -69,7 +89,9 @@ class WidgetHandler:
     def _get_temperature_range_rounded(self):
         """
         Returns the temperature range, rounded to 1 decimal place, suitable for temperature-related widgets.
-        :return: List of rounded temperature values.
+
+        Returns:
+            list: A list of rounded temperature values.
         """
         return [
             str(int(t)) if float(t).is_integer() else str(round(t, 1))
@@ -79,7 +101,7 @@ class WidgetHandler:
     def load_input_widgets(self):
         """
         Loads the main input widgets for the pizza recipe, including fields like number of balls,
-        ball weight, yeast type, etc..
+        ball weight, yeast type, etc.
         """
         with dpg.table(header_row=False):
             dpg.add_table_column()
@@ -93,7 +115,7 @@ class WidgetHandler:
             self._load_oil_widget()
 
     def load_proofing_widgets(self):
-        """ Loads the proofing-related widgets, including cold and room proof temperature and fermentation time """
+        """Loads the proofing-related widgets, including cold and room proof temperature and fermentation time"""
         with dpg.table(header_row=False):
             dpg.add_table_column()
             dpg.add_table_column()
@@ -103,42 +125,49 @@ class WidgetHandler:
             self._load_room_proof_temperature_widget()
             self._load_room_proof_fermentation_widget()
 
-        # self._proof_handler.store_proof_values()
-        # self._proof_handler.update_proofing_mode_from_recipe() # should not be here after updating the load callback
-        # self._proof_handler.store_proof_values()
         self._callback_handler.proofing_mode_setup_callback()
 
     def _load_number_of_balls_widget(self):
+        """Loads the number of balls widget (dropdown)."""
         items = [str(i) for i in range(1, 11)]
         self._labeled_ingredient_widget(dpg.add_combo, IngredientType.number_of_balls, castor=int, items=items)
 
     def _load_ball_weight_widget(self):
+        """Loads the ball weight widget (integer input)."""
         self._labeled_ingredient_widget(dpg.add_input_int, IngredientType.ball_weight)
 
     def _load_yeast_type_widget(self):
+        """Loads the yeast type widget (dropdown)."""
         self._labeled_ingredient_widget(dpg.add_combo, IngredientType.yeast_type, items=self._yeast_types)
 
     def _load_hydration_widget(self):
+        """Loads the hydration widget (integer input)."""
         self._labeled_ingredient_widget(dpg.add_input_int, IngredientType.hydration, max_value=100)
 
     def _load_salt_widget(self):
+        """Loads the salt percentage widget (float input)."""
         ingredient_type = IngredientType.salt_percentage
         self._labeled_ingredient_widget(dpg.add_input_float, ingredient_type, max_value=5.0, format="%.1f")
 
     def _load_oil_widget(self):
+        """Loads the oil percentage widget (float input)."""
         ingredient_type = IngredientType.oil_percentage
         self._labeled_ingredient_widget(dpg.add_input_float, ingredient_type, max_value=5.0, format="%.1f")
 
     def _load_cold_proof_temperature_widget(self):
+        """Loads the cold proof temperature widget (combo box)."""
         self._labeled_temperature_widget(ProofingType.fridge)
 
     def _load_cold_proof_fermentation_widget(self):
+        """Loads the cold proof fermentation widget (combo box)."""
         self._labeled_fermentation_widget(ProofingType.fridge)
 
     def _load_room_proof_temperature_widget(self):
+        """Loads the room proof temperature widget (combo box)."""
         self._labeled_temperature_widget(ProofingType.room)
 
     def _load_room_proof_fermentation_widget(self):
+        """Loads the room proof fermentation widget (combo box)."""
         self._labeled_fermentation_widget(ProofingType.room)
 
     def load_proofing_modes_widget(self):
@@ -218,11 +247,13 @@ class WidgetHandler:
 
     def _labeled_ingredient_widget(self, widget_fn, ingredient_type: IngredientType, *, castor=None, **kwargs):
         """
-        Create a labeled widget for an ingredient input field
-        :param widget_fn: The DearPyGui widget function to call (e.g., dpg.add_input_float)
-        :param ingredient_type: The ingredient type (IngredientType)
-        :param castor: Optional function to cast the input value before updating
-        :param kwargs: Additional keyword arguments passed to the widget.
+        Create a labeled widget for an ingredient input field.
+
+        Args:
+            widget_fn: The DearPyGui widget function to call (e.g., dpg.add_input_float).
+            ingredient_type: The ingredient type (IngredientType).
+            castor: Optional function to cast the input value before updating.
+            kwargs: Additional keyword arguments passed to the widget.
         """
         label = ingredient_type.value
         tag = ingredient_type.name
@@ -233,8 +264,10 @@ class WidgetHandler:
 
     def _labeled_temperature_widget(self, proofing_type: ProofingType):
         """
-        Create a labeled combo box for selecting the proofing temperature
-        :param proofing_type: The type of proofing (ProofingType).
+        Create a labeled combo box for selecting the proofing temperature.
+
+        Args:
+            proofing_type (ProofingType): The type of proofing (ProofingType).
         """
         label = proofing_type.value["temperature_label"]
         tag = proofing_type.value["temperature"]
@@ -246,8 +279,10 @@ class WidgetHandler:
 
     def _labeled_fermentation_widget(self, proofing_type: ProofingType):
         """
-        Create a labeled combo box for selecting fermentation time based on temperature
-        :param proofing_type: The type of proofing (ProofingType).
+        Create a labeled combo box for selecting fermentation time based on temperature.
+
+        Args:
+            proofing_type (ProofingType): The type of proofing (ProofingType).
         """
         fermentation_label = proofing_type.value["fermentation_label"]
         fermentation_tag = proofing_type.value["fermentation"]
@@ -269,13 +304,15 @@ class WidgetHandler:
 
     def _labeled_widget(self, label, widget_fn, tag, default_value, callback, **kwargs):
         """
-        Create a labeled widget row with a text label and input widget
-        :param label: The text to display next to the input
-        :param widget_fn: The DearPyGui function to use for creating the widget
-        :param tag: Unique tag name for the widget
-        :param default_value: The default value shown in the widget
-        :param callback: Function to call when the value changes
-        :param kwargs: Additional arguments passed to the widget.
+        Create a labeled widget row with a text label and input widget.
+
+        Args:
+            label: The text to display next to the input.
+            widget_fn: The DearPyGui function to use for creating the widget.
+            tag: Unique tag name for the widget.
+            default_value: The default value shown in the widget.
+            callback: Function to call when the value changes.
+            kwargs: Additional arguments passed to the widget.
         """
         with dpg.table_row():
             dpg.add_text(label, tag=f"{tag}_label")
@@ -285,11 +322,13 @@ class WidgetHandler:
     @staticmethod
     def _add_button(label, height, width, callback):
         """
-        Add an image button with a tooltip
-        :param label: Base name for the icon and tooltip (e.g., 'save')
-        :param height: Button height in pixels
-        :param width: Button width in pixels
-        :param callback: Function to call when the button is clicked.
+        Add an image button with a tooltip.
+
+        Args:
+            label (str): Base name for the icon and tooltip (e.g., 'save').
+            height (int): Button height in pixels.
+            width (int): Button width in pixels.
+            callback (function): Function to call when the button is clicked.
         """
         tag = f"{label}_button"
         label_capitalize = label.capitalize()

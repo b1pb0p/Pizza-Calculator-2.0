@@ -1,5 +1,6 @@
 """
 ui_enums.py
+
 Defines tag Enums for ingredients and proofing steps in the pizza recipe app.
 """
 
@@ -40,4 +41,5 @@ class ProofingMode(Enum):
 
 
 def get_proofing_modes():
+    """Returns the list of available proofing modes."""
     return [mode.value for mode in ProofingMode]

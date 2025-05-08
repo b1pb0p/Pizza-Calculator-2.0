@@ -1,6 +1,8 @@
 """
 recipe.py
-This file contains the PizzaRecipe class
+
+This file contains the PizzaRecipe class, which manages the pizza recipe calculations
+and properties such as flour weight, yeast percentage, and fermentation details.
 """
 
 from .utilities import auto_property
@@ -22,6 +24,13 @@ class PizzaRecipe:
     fridge_fermentation = auto_property("fridge_fermentation", "recalculate_yeast_percentage")
 
     def __init__(self, calculator, base_recipe):
+        """
+        Initializes the PizzaRecipe with values from the base recipe and a given calculator.
+
+        Args:
+            calculator (PizzaCalculator): The calculator for pizza style calculations.
+            base_recipe (dict): The base recipe data containing ingredients and fermentation details.
+        """
         self._calculator = calculator
 
         self._salt_percentage = base_recipe['salt_percentage']
@@ -42,30 +51,55 @@ class PizzaRecipe:
         self.recalculate_yeast_percentage()
 
     def recalculate_flour_weight(self):
+        """
+        Recalculates the flour weight using the provided calculator.
+
+        This method updates the `_flour_weight` attribute.
+        """
         self._flour_weight = self._calculator.calculate_flour_weight(self)
 
     def recalculate_yeast_percentage(self):
+        """
+        Recalculates the yeast percentage using the provided calculator.
+
+        This method updates the `_yeast_percentage` attribute.
+        """
         self._yeast_percentage = self._calculator.calculate_yeast_percentage(self)
 
     @property
     def pizza_style_calculator(self):
+        """Returns the calculator instance used for the pizza style."""
         return self._calculator
 
     @property
     def flour_weight(self):
+        """Returns the calculated flour weight."""
         return self._flour_weight
 
     @property
     def yeast_percentage(self):
+        """Returns the calculated yeast percentage."""
         return self._yeast_percentage
 
     def _format_yeast(self):
+        """
+        Formats the yeast weight to a string with appropriate precision.
+
+        Returns:
+            str: The formatted yeast weight as a string.
+        """
         formatted = f"{self._calculator.calculate_yeast_weight(self):.3f}".rstrip("0").rstrip(".")
         if "." not in formatted:
             formatted += ".0"
         return formatted
 
     def __str__(self):
+        """
+        Returns a string representation of the pizza recipe, including all relevant details.
+
+        Returns:
+            str: The string representation of the recipe.
+        """
         parts = [
             f"Flour: {round(self._flour_weight)}g",
             f"Water: {round(self._calculator.calculate_water_weight(self))}g",

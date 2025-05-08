@@ -1,3 +1,10 @@
+"""
+callback.py
+
+This file contains the CallbackHandler class, which manages UI interactions and updates
+the recipe object accordingly, including saving, loading, and adjusting proofing settings.
+"""
+
 import dearpygui.dearpygui as dpg
 
 from src.data import DataExtractor
@@ -14,8 +21,10 @@ class CallbackHandler:
 
     def __init__(self, recipe):
         """
-        Initialize the callback handler
-        :param recipe: The recipe object to update
+        Initialize the callback handler.
+
+        Args:
+            recipe (PizzaRecipe): The recipe object to update.
         """
         self._recipe = recipe
         self._data_extractor = DataExtractor()
@@ -31,9 +40,11 @@ class CallbackHandler:
 
     def general_update(self, app_data, user_data):
         """
-        Generic update callback for any simple recipe attribute modified via the UI
-        :param app_data: The new value from the UI (number, string, etc.)
-        :param user_data: The name of the recipe attribute to update (string).
+        Generic update callback for any simple recipe attribute modified via the UI.
+
+        Args:
+            app_data (various): The new value from the UI (number, string, etc.)
+            user_data (str): The name of the recipe attribute to update.
         """
         setattr(self._recipe, user_data, app_data)
         self.update_output()
@@ -41,9 +52,11 @@ class CallbackHandler:
     def temperature_update(self, app_data, proofing_type: ProofingType):
         """
         Called when temperature input is changed. Updates recipe and corresponding
-        fermentation time based on closest valid temperature
-        :param app_data: New temperature value from the UI
-        :param proofing_type: ProofingType enum (e.g., room or fridge).
+        fermentation time based on closest valid temperature.
+
+        Args:
+            app_data (various): New temperature value from the UI.
+            proofing_type (ProofingType): ProofingType enum (e.g., room or fridge).
         """
         temperature = float(app_data)
         fermentation = int(dpg.get_value(proofing_type.value["fermentation"]))
@@ -53,9 +66,11 @@ class CallbackHandler:
 
     def fermentation_update(self, app_data, proofing_type: ProofingType):
         """
-        Called when fermentation duration is changed manually
-        :param app_data: New fermentation value from UI
-        :param proofing_type: ProofingType enum.
+        Called when fermentation duration is changed manually.
+
+        Args:
+            app_data (various): New fermentation value from UI.
+            proofing_type (ProofingType): ProofingType enum.
         """
         setattr(self._recipe, proofing_type.value["fermentation"], float(app_data))
         self.update_output()
@@ -100,10 +115,12 @@ class CallbackHandler:
     def _apply_proofing_adjustments(self, proofing_type: ProofingType, temperature, fermentation):
         """
         Adjusts recipe temperature and fermentation values to match the nearest valid values,
-        and updates UI accordingly
-        :param proofing_type: Type of proofing (room/fridge)
-        :param temperature: User-provided temperature input
-        :param fermentation: User-provided fermentation duration.
+        and updates UI accordingly.
+
+        Args:
+            proofing_type (ProofingType): Type of proofing (room/fridge).
+            temperature (float): User-provided temperature input.
+            fermentation (int): User-provided fermentation duration.
         """
         temperature_tag = proofing_type.value["temperature"]
         fermentation_tag = proofing_type.value["fermentation"]
@@ -118,11 +135,13 @@ class CallbackHandler:
 
     def _update_proofing_mode(self, first_type, second_type, show_first, show_second):
         """
-        Toggles visibility of proofing UI items and optionally resets their stored values
-        :param first_type: ProofingType to show/hide first
-        :param second_type: ProofingType to show/hide second
-        :param show_first: Boolean flag whether to show first_type
-        :param show_second: Boolean flag whether to show second_type.
+        Toggles visibility of proofing UI items and optionally resets their stored values.
+
+        Args:
+            first_type (ProofingType): ProofingType to show/hide first.
+            second_type (ProofingType): ProofingType to show/hide second.
+            show_first (bool): Whether to show the first proofing type.
+            show_second (bool): Whether to show the second proofing type.
         """
         self._proof_handler.toggle_proof_item(first_type, show_first)
         self._proof_handler.toggle_proof_item(second_type, show_second)
@@ -131,9 +150,11 @@ class CallbackHandler:
 
     def proofing_mode_callback(self, proofing_mode: ProofingMode):
         """
-        Called when user selects a new proofing mode (dual/room-only/fridge-only).
-        Adjusts which proofing inputs are visible and active
-        :param proofing_mode: A ProofingMode enum indicating the desired UI configuration.
+        Called when the user selects a new proofing mode (dual/room-only/fridge-only).
+        Adjusts which proofing inputs are visible and active.
+
+        Args:
+            proofing_mode (ProofingMode): A ProofingMode enum indicating the desired UI configuration.
         """
         if proofing_mode == ProofingMode.dual_proofing_mode:
             self._update_proofing_mode(ProofingType.room, ProofingType.fridge, True, True)

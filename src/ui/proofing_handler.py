@@ -1,3 +1,11 @@
+"""
+proofing_handler.py
+
+This file contains the ProofingHandler class, which manages proofing settings for a pizza recipe,
+including room and cold (fridge) proofing. It handles UI visibility toggling, value updates,
+and syncing with the recipe model.
+"""
+
 import dearpygui.dearpygui as dpg
 
 from src.configuration import Configuration
@@ -12,17 +20,21 @@ class ProofingHandler:
 
     def __init__(self, recipe):
         """
-        Initializes the ProofingHandler
-        :param recipe: The recipe object that stores fermentation and temperature values
+        Initializes the ProofingHandler.
+
+        Args:
+            recipe (PizzaRecipe): The recipe object that stores fermentation and temperature values.
         """
         self._recipe = recipe
         self._configuration = Configuration()
 
     def store_proofing_values(self, proofing_type: ProofingType, reset=False):
         """
-        Stores proofing values (temperature and fermentation time) into the recipe
-        :param proofing_type: The type of proofing (room or fridge)
-        :param reset: If True, resets the values to 0. Otherwise, updates the values from the UI.
+        Stores proofing values (temperature and fermentation time) into the recipe.
+
+        Args:
+            proofing_type (ProofingType): The type of proofing (room or fridge).
+            reset (bool): If True, resets the values to 0. Otherwise, updates the values from the UI.
         """
         temperature_tag = proofing_type.value["temperature"]
         fermentation_tag = proofing_type.value["fermentation"]
@@ -72,9 +84,11 @@ class ProofingHandler:
     @staticmethod
     def toggle_proof_item(proofing_type: ProofingType, show=True):
         """
-        Toggles the visibility of proofing items (temperature and fermentation) in the UI
-        :param proofing_type: The type of proofing (room or fridge)
-        :param show: Whether to show or hide the proofing items.
+        Toggles the visibility of proofing items (temperature and fermentation) in the UI.
+
+        Args:
+            proofing_type (ProofingType): The type of proofing (room or fridge).
+            show (bool): Whether to show or hide the proofing items.
         """
         temperature_tag = proofing_type.value["temperature"]
         fermentation_tag = proofing_type.value["fermentation"]
