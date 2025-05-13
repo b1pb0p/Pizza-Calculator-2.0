@@ -10,7 +10,9 @@ Easily input your preferences and get instant, accurate calculations for:
 
 The calculator automatically adjusts ingredient ratios based on your selected fermentation method (room or fridge), temperature, and duration.
 
+## Version
 
+**1.0.0**
 
 
 
