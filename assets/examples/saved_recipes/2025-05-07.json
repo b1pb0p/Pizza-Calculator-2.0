@@ -1,0 +1,16 @@
+{
+    "info": "2025-05-07",
+    "base_recipe": {
+        "pizza_style": "Neo-Neapolitan",
+        "salt_percentage": 3.0,
+        "oil_percentage": 1.0,
+        "yeast_type": "IDY",
+        "hydration": 73,
+        "ball_weight": 295,
+        "number_of_balls": 3,
+        "room_temperature": 21.1,
+        "room_fermentation": 2,
+        "fridge_temperature": 4.4,
+        "fridge_fermentation": 48
+    }
+}
