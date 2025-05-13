@@ -31,16 +31,16 @@ You can view the original source here:
 
 **Default recipe**
 
-<img src="https://github.com/b1pb0p/Pizza-Calculator-2.0/blob/main/src/screenshots/Screenshot%202025-04-20%20114608.png" width="450">
+<img src="https://github.com/b1pb0p/pizza-calculator/blob/version/1.0.0/src/screenshots/Screenshot%202025-04-20%20114608.png" width="450">
 
 **Room proof only, select yeast type**
 
-<img src="https://github.com/b1pb0p/Pizza-Calculator-2.0/blob/main/src/screenshots/Screenshot%202025-04-20%20114737.png" width="450">
+<img src="https://github.com/b1pb0p/pizza-calculator/blob/version/1.0.0/src/screenshots/Screenshot%202025-04-20%20114737.png" width="450">
 
 
 ## Demo
 
-<img src="https://github.com/b1pb0p/Pizza-Calculator-2.0/blob/main/src/screenshots/Screen%20Recording%202025-04-20%20121654.gif" width="450">
+<img src="https://github.com/b1pb0p/pizza-calculator/blob/version/1.0.0/src/screenshots/Screen%20Recording%202025-04-20%20121654.gif" width="450">
 
 ## Requirements
 
